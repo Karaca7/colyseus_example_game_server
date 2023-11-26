@@ -1,42 +1,28 @@
 const colyseus = require("colyseus");
 
-const {State,Player} =require('./schema/NormandiaState')
+const { State, Player } = require("./schema/NormandiaState");
 
 exports.Normandia = class extends colyseus.Room {
+  onCreate(options) {
+    this.setState(new State());
 
-    onCreate(options){
+    this.onMessage("move", (client, message) => {
+      // handle "move" message
 
-        this.setState(new State())
+      let { x, y, quantity } = message;
+      console.log(message, "data");
+      // console.log(message,"message");
+    });
+  }
 
-        this.onMessage("move", (client, message) => {
-            // handle "move" message
+  onJoin(client, options) {
+    // client takım bilgisini yollayacak
+    this.state.players.set(client.sessionId, new Player());
+  }
 
-           let { x,y,quantity}=message
-            console.log(message,"müşteriii");
-            // console.log(message,"message");
-        });
-
-
+  onMessage(client, message) {
+    if (message.type === "take_army") {
+      const {} = message.request;
     }
-
-    onJoin(client, options) {
-        // client takım bilgisini yollayacak
-        this.state.players.set(client.sessionId, new Player());
-      }
-      
-
-
-
-    onMessage(client,message){
-
-        if(message.type=='take_army'){
-
-            const {} =message.request
-        }
-
-
-    }
+  }
 };
-
-
-
